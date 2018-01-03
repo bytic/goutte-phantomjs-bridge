@@ -18,30 +18,10 @@ class ClientBridge implements GuzzleClientInterface
     /**
      * @inheritdoc
      */
-    public function request($method, $uri = '', array $options = [])
+    public function request($method, $uri = '', array $parameters = [])
     {
-        $client = $this->getPhantomJsClient();
-
-        /**
-         * @see \JonnyW\PhantomJs\Http\Request
-         **/
-        $request = $client->getMessageFactory()->createRequest($uri, $method);
-        $request->addHeader(
-            'User-Agent',
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0'
-        );
-
-        $request->addHeader(
-            'Content-Type',
-            'application/x-www-form-urlencoded'
-        );
-
-        if (isset($options['form_params'])) {
-            $request->setRequestData($options['form_params']);
-        }
-
-//        /** IMPORTANT - the delay is necessary to make sure the javascript is all loaded */
-//        $request->setDelay(12);
+        $client  = $this->getPhantomJsClient();
+        $request = $this->createRequest($client, $method, $uri, $parameters);
 
         /**
          * @see \JonnyW\PhantomJs\Http\Response
@@ -80,6 +60,37 @@ class ClientBridge implements GuzzleClientInterface
      */
     public function getConfig($option = null)
     {
+    }
+
+    /**
+     * @param PhantomJsBaseClient $client
+     * @param $method
+     * @param string $uri
+     * @param array $parameters
+     *
+     * @return \JonnyW\PhantomJs\Http\RequestInterface
+     */
+    protected function createRequest($client, $method, $uri = '', array $parameters = [])
+    {
+        /**
+         * @see \JonnyW\PhantomJs\Http\Request
+         **/
+        $request = $client->getMessageFactory()->createRequest($uri, $method);
+        $request->addHeader(
+            'User-Agent',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0'
+        );
+
+        $request->addHeader(
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
+
+        if (isset($parameters['form_params'])) {
+            $request->setRequestData($parameters['form_params']);
+        }
+
+        return $request;
     }
 
     /**

@@ -26,10 +26,10 @@
   },
   "scripts": {
     "post-install-cmd": [
-      "PhantomInstaller\\Installer::installPhantomJS"
+      "ByTIC\\GouttePhantomJs\\Composer\\PhantomInstaller::installPhantomJS"
     ],
     "post-update-cmd": [
-      "PhantomInstaller\\Installer::installPhantomJS"
+      "ByTIC\\GouttePhantomJs\\Composer\\PhantomInstaller::installPhantomJS"
     ]
   }
 }
