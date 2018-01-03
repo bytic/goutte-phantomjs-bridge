@@ -1,5 +1,5 @@
 {
-  "name": "ByTIC/goutte-phantomjs-bridge",
+  "name": "bytic/goutte-phantomjs-bridge",
   "description": "a scraper for getting data from racetec websites",
   "license": "MIT",
   "authors": [
