@@ -148,7 +148,7 @@ class ClientBridge implements GuzzleClientInterface
      *
      * @return \JonnyW\PhantomJs\Http\RequestInterface|RequestInterface
      */
-    protected function applyConfig(RequestInterface $request)
+    protected function applyConfig($request)
     {
         $requestDelay = $this->getConfig('request_delay');
         if ($requestDelay > 0) {
