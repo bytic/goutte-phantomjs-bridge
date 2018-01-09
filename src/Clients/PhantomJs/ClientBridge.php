@@ -102,6 +102,17 @@ class ClientBridge implements GuzzleClientInterface
     }
 
     /**
+     * @param $option
+     * @param $value
+     *
+     * @return mixed
+     */
+    public function setConfig($option, $value)
+    {
+        return $this->config[$option] = $value;
+    }
+
+    /**
      * @param PhantomJsBaseClient $client
      * @param $method
      * @param string $uri
