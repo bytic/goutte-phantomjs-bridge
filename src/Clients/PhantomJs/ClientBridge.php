@@ -15,6 +15,19 @@ class ClientBridge implements GuzzleClientInterface
 {
     protected $phantomJsClient = null;
 
+    /** @var array Default request options */
+    private $config;
+
+    /**
+     * ClientBridge constructor.
+     *
+     * @param array $config
+     */
+    public function __construct(array $config = [])
+    {
+        $this->configureDefaults($config);
+    }
+
     /**
      * @inheritdoc
      */
@@ -22,6 +35,7 @@ class ClientBridge implements GuzzleClientInterface
     {
         $client  = $this->getPhantomJsClient();
         $request = $this->createRequest($client, $method, $uri, $parameters);
+        $request = $this->applyConfig($request);
 
         /**
          * @see \JonnyW\PhantomJs\Http\Response
@@ -60,6 +74,31 @@ class ClientBridge implements GuzzleClientInterface
      */
     public function getConfig($option = null)
     {
+        return $option === null
+            ? $this->config
+            : (isset($this->config[$option]) ? $this->config[$option] : null);
+    }
+
+    /**
+     * Configures the default options for a client.
+     *
+     * @param array $config
+     */
+    protected function configureDefaults(array $config)
+    {
+        $defaults = $this->getConfigDefaults();
+
+        $this->config = $config + $defaults;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getConfigDefaults()
+    {
+        return [
+            'request_delay' => false
+        ];
     }
 
     /**
@@ -92,6 +131,22 @@ class ClientBridge implements GuzzleClientInterface
 
         return $request;
     }
+
+    /**
+     * @param RequestInterface|\JonnyW\PhantomJs\Http\RequestInterface $request
+     *
+     * @return \JonnyW\PhantomJs\Http\RequestInterface|RequestInterface
+     */
+    protected function applyConfig(RequestInterface $request)
+    {
+        $requestDelay = $this->getConfig('request_delay');
+        if ($requestDelay > 0) {
+            $request->setDelay($requestDelay);
+        }
+
+        return $request;
+    }
+
 
     /**
      * @return PhantomJsBaseClient|null
