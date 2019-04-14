@@ -13,10 +13,15 @@
       "ByTIC\\GouttePhantomJs\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "ByTIC\\GouttePhantomJs\\Tests\\": "tests/src/"
+    }
+  },
   "require": {
     "php": "^7.0",
     "fabpot/goutte": "^3.2",
-    "symfony/dependency-injection": "3.3.9",
+    "symfony/dependency-injection": "^3.3|^4.0",
     "jonnyw/php-phantomjs": "^4.6"
   },
   "require-dev": {
