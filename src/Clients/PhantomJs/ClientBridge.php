@@ -2,16 +2,18 @@
 
 namespace ByTIC\GouttePhantomJs\Clients\PhantomJs;
 
-use GuzzleHttp\ClientInterface as GuzzleClientInterface;
 use JonnyW\PhantomJs\Client as PhantomJsBaseClient;
+use JonnyW\PhantomJs\Http\RequestInterface;
 use PhantomInstaller\PhantomBinary;
-use Psr\Http\Message\RequestInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
+use Symfony\Contracts\HttpClient\ResponseStreamInterface;
 
 /**
  * Class PhantomJsClientBridge
  * @package ByTIC\GouttePhantomJs\Clients\PhantomJs
  */
-class ClientBridge implements GuzzleClientInterface
+class ClientBridge implements HttpClientInterface
 {
     protected $phantomJsClient = null;
 
@@ -31,10 +33,10 @@ class ClientBridge implements GuzzleClientInterface
     /**
      * @inheritdoc
      */
-    public function request($method, $uri = '', array $parameters = [])
+    public function request(string $method, string $url, array $options = []): ResponseInterface
     {
         $client  = $this->getPhantomJsClient();
-        $request = $this->createRequest($client, $method, $uri, $parameters);
+        $request = $this->createRequest($client, $method, $url, $options);
         $request = $this->applyConfig($request);
 
         /**
@@ -66,6 +68,13 @@ class ClientBridge implements GuzzleClientInterface
      * @inheritdoc
      */
     public function sendAsync(RequestInterface $request, array $options = [])
+    {
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function stream($responses, float $timeout = null): ResponseStreamInterface
     {
     }
 
@@ -118,7 +127,7 @@ class ClientBridge implements GuzzleClientInterface
      * @param string $uri
      * @param array $parameters
      *
-     * @return \JonnyW\PhantomJs\Http\RequestInterface
+     * @return RequestInterface
      */
     protected function createRequest($client, $method, $uri = '', array $parameters = [])
     {
@@ -144,9 +153,9 @@ class ClientBridge implements GuzzleClientInterface
     }
 
     /**
-     * @param RequestInterface|\JonnyW\PhantomJs\Http\RequestInterface $request
+     * @param RequestInterface $request
      *
-     * @return \JonnyW\PhantomJs\Http\RequestInterface|RequestInterface
+     * @return RequestInterface
      */
     protected function applyConfig($request)
     {

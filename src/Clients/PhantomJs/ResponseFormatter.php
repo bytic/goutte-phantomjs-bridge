@@ -2,27 +2,28 @@
 
 namespace ByTIC\GouttePhantomJs\Clients\PhantomJs;
 
-use GuzzleHttp\Psr7\Response;
+use JonnyW\PhantomJs\Http\ResponseInterface as JonnyWResponseInterface;
+use Symfony\Component\BrowserKit\Response as BrowserKitResponse;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
  * Class ResponseBridge
  * @package ByTIC\GouttePhantomJs\Clients\PhantomJs
  */
-class ResponseFormatter extends Response
+class ResponseFormatter
 {
 
     /**
      * ResponseBridge constructor.
      * @param \JonnyW\PhantomJs\Http\Response|\JonnyW\PhantomJs\Http\ResponseInterface $phantomJsResponse
-     * @return Response
+     * @return BrowserKitResponse
      */
-    public static function format($phantomJsResponse)
+    public static function format(JonnyWResponseInterface $phantomJsResponse): ResponseInterface
     {
-        $response = new Response(
-            $phantomJsResponse->getStatus(),
-            $phantomJsResponse->getHeaders(),
-            $phantomJsResponse->getContent()
-        );
-        return $response;
+        $content = $phantomJsResponse->getContent();
+        $status = $phantomJsResponse->getStatus();
+        $headers = $phantomJsResponse->getHeaders();
+
+        return new BrowserKitResponse($content, $status, $headers);
     }
 }

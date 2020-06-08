@@ -17,6 +17,5 @@ class ClientFactoryTest extends AbstractTest
         $client = ClientFactory::getGenericClient();
 
         self::assertInstanceOf(Client::class, $client);
-        self::assertInstanceOf(ClientBridge::class, $client->getClient());
     }
 }
