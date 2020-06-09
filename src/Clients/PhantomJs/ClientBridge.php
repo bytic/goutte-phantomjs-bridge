@@ -5,6 +5,7 @@ namespace ByTIC\GouttePhantomJs\Clients\PhantomJs;
 use JonnyW\PhantomJs\Client as PhantomJsBaseClient;
 use JonnyW\PhantomJs\Http\RequestInterface;
 use PhantomInstaller\PhantomBinary;
+use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 use Symfony\Contracts\HttpClient\ResponseStreamInterface;
@@ -134,19 +135,39 @@ class ClientBridge implements HttpClientInterface
         /**
          * @see \JonnyW\PhantomJs\Http\Request
          **/
-        $request = $client->getMessageFactory()->createRequest($uri, $method);
+        $request = $client->getMessageFactory()->createCaptureRequest($uri, $method);
+
+        $userAgent = (isset($parameters['headers']['user-agent'])) ? $parameters['headers']['user-agent'] : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0';
         $request->addHeader(
             'User-Agent',
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0'
+            $userAgent
         );
 
-        $request->addHeader(
-            'Content-Type',
-            'application/x-www-form-urlencoded'
-        );
+        if (isset($parameters['headers']['Content-Type'])) {
+            $request->addHeader(
+                'Content-Type',
+                $parameters['headers']['Content-Type']
+            );
+        }
 
-        if (isset($parameters['form_params'])) {
-            $request->setRequestData($parameters['form_params']);
+        if (isset($parameters['body'])) {
+            parse_str($parameters['body'], $requestData);
+            $request->setRequestData($requestData);
+        }
+
+        if (isset($parameters['headers']['cookie'])) {
+            $cookies = explode(';', $parameters['headers']['cookie']);
+            foreach ($cookies as $cookieString) {
+                $cookie = Cookie::fromString($cookieString);
+                $domain = $cookie->getDomain();
+                $domain = empty($domain) ? '.'.$parameters['headers']['host'] : $domain;
+                $request->addCookie(
+                    $cookie->getName(),
+                    $cookie->getValue(),
+                    $cookie->getPath(),
+                    $domain
+                );
+            }
         }
 
         return $request;
@@ -162,6 +183,22 @@ class ClientBridge implements HttpClientInterface
         $requestDelay = $this->getConfig('request_delay');
         if ($requestDelay > 0) {
             $request->setDelay($requestDelay);
+        }
+
+        $outputFile = $this->getConfig('outputFile');
+        if ($outputFile) {
+            $request->setOutputFile($outputFile);
+        }
+
+        $viewportSize = $this->getConfig('viewportSize');
+        if ($viewportSize) {
+            $captureDimensions = $this->getConfig('captureDimensions');
+
+            $request->setViewportSize($viewportSize['width'], $viewportSize['height']);
+            $request->setCaptureDimensions(
+                $captureDimensions['width'], $captureDimensions['height'],
+                $captureDimensions['top'], $captureDimensions['left']
+            );
         }
 
         return $request;

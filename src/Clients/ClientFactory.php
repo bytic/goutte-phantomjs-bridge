@@ -3,6 +3,9 @@
 namespace ByTIC\GouttePhantomJs\Clients;
 
 use Goutte\Client;
+use Symfony\Component\BrowserKit\CookieJar;
+use Symfony\Component\BrowserKit\History;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * Class ClientFactory
@@ -21,9 +24,12 @@ class ClientFactory
     /**
      * @return Client
      */
-    public static function getGoutteClient($client = null)
-    {
-        $client = new Client($client);
+    public static function getGoutteClient(
+        HttpClientInterface $client = null,
+        History $history = null,
+        CookieJar $cookieJar = null
+    ) {
+        $client = new Client($client, $history, $cookieJar);
         $client->setServerParameter('HTTP_USER_AGENT',
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0');
 
@@ -33,10 +39,25 @@ class ClientFactory
     /**
      * @return Client
      */
-    public static function getPhantomJsClient()
+    public static function getPhantomJsClient(History $history = null, CookieJar $cookieJar = null)
     {
-        $phantomJsClient = new PhantomJs\ClientBridge();
-        $client = self::getGoutteClient($phantomJsClient);
+        $phantomJsClient = static::getPhantomJsClientBridge();
+        $client = self::getGoutteClient($phantomJsClient, $history, $cookieJar);
+
         return $client;
+    }
+
+    /**
+     * @return PhantomJs\ClientBridge
+     */
+    public static function getPhantomJsClientBridge()
+    {
+        static $phantomJsClient;
+
+        if ($phantomJsClient === null) {
+            $phantomJsClient = new PhantomJs\ClientBridge();
+        }
+
+        return $phantomJsClient;
     }
 }

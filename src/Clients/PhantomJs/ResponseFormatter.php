@@ -3,7 +3,7 @@
 namespace ByTIC\GouttePhantomJs\Clients\PhantomJs;
 
 use JonnyW\PhantomJs\Http\ResponseInterface as JonnyWResponseInterface;
-use Symfony\Component\BrowserKit\Response as BrowserKitResponse;
+use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
@@ -16,14 +16,35 @@ class ResponseFormatter
     /**
      * ResponseBridge constructor.
      * @param \JonnyW\PhantomJs\Http\Response|\JonnyW\PhantomJs\Http\ResponseInterface $phantomJsResponse
-     * @return BrowserKitResponse
+     * @return ResponseInterface
      */
     public static function format(JonnyWResponseInterface $phantomJsResponse): ResponseInterface
     {
-        $content = $phantomJsResponse->getContent();
-        $status = $phantomJsResponse->getStatus();
-        $headers = $phantomJsResponse->getHeaders();
+        return Response::fromPhantomJsResponse($phantomJsResponse);
+    }
 
-        return new BrowserKitResponse($content, $status, $headers);
+    /**
+     * ResponseBridge constructor.
+     * @param \JonnyW\PhantomJs\Http\Response|\JonnyW\PhantomJs\Http\ResponseInterface $phantomJsResponse
+     * @return array
+     */
+    public static function formatCookies(JonnyWResponseInterface $phantomJsResponse): array
+    {
+        $phantomCookies = $phantomJsResponse->getCookies();
+        $return = [];
+        foreach ($phantomCookies as $phantomCookie) {
+            $cookie = new Cookie(
+                $phantomCookie['name'],
+                $phantomCookie['value'],
+                $phantomCookie['expiry'],
+                $phantomCookie['path'],
+                $phantomCookie['domain'],
+                $phantomCookie['secure'],
+                $phantomCookie['httponly']
+            );
+            $return[] = $cookie->__toString();
+        }
+
+        return $return;
     }
 }
