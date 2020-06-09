@@ -36,7 +36,7 @@ class ResponseFormatter
             $cookie = new Cookie(
                 $phantomCookie['name'],
                 $phantomCookie['value'],
-                $phantomCookie['expiry'],
+                isset($phantomCookie['expiry']) ? $phantomCookie['expiry'] : null,
                 $phantomCookie['path'],
                 $phantomCookie['domain'],
                 $phantomCookie['secure'],
