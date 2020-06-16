@@ -1,39 +1,45 @@
 {
-  "name": "bytic/goutte-phantomjs-bridge",
-  "description": "a scraper for getting data from racetec websites",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Gabriel Solomon",
-      "email": "hello@gabrielsolomon.ro"
-    }
-  ],
-  "autoload": {
-    "psr-4": {
-      "ByTIC\\GouttePhantomJs\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "ByTIC\\GouttePhantomJs\\Tests\\": "tests/src/"
-    }
-  },
-  "require": {
-    "php": "^7.0",
-    "fabpot/goutte": "^4.0",
-    "symfony/dependency-injection": "^3.3|^4.0|^5.0",
-    "jonnyw/php-phantomjs": "^4.6"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^7.2|^8.0|^9.0",
-    "mockery/mockery": "^0.9"
-  },
-  "scripts": {
-    "post-install-cmd": [
-      "ByTIC\\GouttePhantomJs\\Composer\\PhantomInstaller::installPhantomJS"
+    "name": "bytic/goutte-phantomjs-bridge",
+    "description": "a scraper for getting data from racetec websites",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gabriel Solomon",
+            "email": "hello@gabrielsolomon.ro"
+        }
     ],
-    "post-update-cmd": [
-      "ByTIC\\GouttePhantomJs\\Composer\\PhantomInstaller::installPhantomJS"
-    ]
-  }
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/gabrielsolomon/php-phantomjs"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ByTIC\\GouttePhantomJs\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ByTIC\\GouttePhantomJs\\Tests\\": "tests/src/"
+        }
+    },
+    "require": {
+        "php": "^7.0",
+        "fabpot/goutte": "^4.0",
+        "symfony/dependency-injection": "^3.3|^4.0|^5.0",
+        "jonnyw/php-phantomjs": "^5.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.2|^8.0|^9.0",
+        "mockery/mockery": "^0.9"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "ByTIC\\GouttePhantomJs\\Composer\\PhantomInstaller::installPhantomJS"
+        ],
+        "post-update-cmd": [
+            "ByTIC\\GouttePhantomJs\\Composer\\PhantomInstaller::installPhantomJS"
+        ]
+    }
 }
