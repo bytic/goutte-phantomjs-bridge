@@ -25,14 +25,13 @@
         }
     },
     "require": {
-        "php": "^7.0",
+        "php": "^7.0|^8.0",
         "fabpot/goutte": "^4.0",
-        "symfony/dependency-injection": "^3.3|^4.0|^5.0",
-        "jonnyw/php-phantomjs": "^5.0"
+        "symfony/dependency-injection": "^4.0|^5.0|^6.0",
+        "jonnyw/php-phantomjs": "^5.0.6"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.2|^8.0|^9.0",
-        "mockery/mockery": "^0.9"
+        "bytic/phpqatools": "^1.0"
     },
     "scripts": {
         "post-install-cmd": [
@@ -41,5 +40,7 @@
         "post-update-cmd": [
             "ByTIC\\GouttePhantomJs\\Composer\\PhantomInstaller::installPhantomJS"
         ]
-    }
+    },
+    "prefer-stable": true,
+    "minimum-stability": "dev"
 }
