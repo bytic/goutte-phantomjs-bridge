@@ -99,9 +99,9 @@ class Response implements \Symfony\Contracts\HttpClient\ResponseInterface
     /**
      * @param string $content
      */
-    public function setContent(string $content)
+    public function setContent(?string $content)
     {
-        $this->content = $content;
+        $this->content = (string) $content;
     }
 
     public function getContent(bool $throw = true): string
@@ -121,7 +121,7 @@ class Response implements \Symfony\Contracts\HttpClient\ResponseInterface
     /**
      * @inheritDoc
      */
-    public function getInfo(?string $type = null)
+    public function getInfo(?string $type = null): mixed
     {
     }
 }
