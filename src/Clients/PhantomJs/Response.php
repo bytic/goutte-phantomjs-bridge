@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace ByTIC\GouttePhantomJs\Clients\PhantomJs;
 
@@ -110,6 +111,7 @@ class Response implements \Symfony\Contracts\HttpClient\ResponseInterface
 
     public function toArray(bool $throw = true): array
     {
+        return [];
     }
 
     public function cancel(): void
@@ -119,7 +121,7 @@ class Response implements \Symfony\Contracts\HttpClient\ResponseInterface
     /**
      * @inheritDoc
      */
-    public function getInfo(string $type = null)
+    public function getInfo(?string $type = null)
     {
     }
 }
