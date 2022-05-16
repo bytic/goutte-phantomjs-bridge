@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace ByTIC\GouttePhantomJs\Clients\PhantomJs;
 
@@ -82,6 +83,14 @@ class ClientBridge implements HttpClientInterface
     /**
      * @inheritdoc
      */
+    public function withOptions(array $options): static
+    {
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getConfig($option = null)
     {
         return $option === null
@@ -137,7 +146,10 @@ class ClientBridge implements HttpClientInterface
          **/
         $request = $client->getMessageFactory()->createCaptureRequest($uri, $method);
 
-        $userAgent = (isset($parameters['headers']['user-agent'])) ? $parameters['headers']['user-agent'] : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0';
+        $userAgent = (isset($parameters['headers']['user-agent']))
+            ? $parameters['headers']['user-agent']
+            : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0';
+
         $request->addHeader(
             'User-Agent',
             $userAgent
@@ -217,4 +229,5 @@ class ClientBridge implements HttpClientInterface
 
         return $this->phantomJsClient;
     }
+
 }
